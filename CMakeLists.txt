@@ -22,9 +22,9 @@ include(cmake/glog.cmake)
 include(cmake/PCL.cmake)
 include(cmake/eigen.cmake)
 include(cmake/geographic.cmake)
+include(cmake/global_defination.cmake)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
-include(cmake/global_defination.cmake)
 catkin_package()
 
 file(GLOB_RECURSE ALL_SRCS "*.cpp")
@@ -35,3 +35,6 @@ list(REMOVE_ITEM ALL_SRCS ${THIRD_PARTY_SRCS})
 
 add_executable(test_frame_node src/test_frame_node.cpp ${ALL_SRCS})
 target_link_libraries(test_frame_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
+
+add_executable(front_end_node src/front_end_node.cpp ${ALL_SRCS})
+target_link_libraries(front_end_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
