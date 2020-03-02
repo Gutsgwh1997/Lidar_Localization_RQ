@@ -11,6 +11,7 @@ namespace lidar_localization {
 GNSSSubscriber::GNSSSubscriber(ros::NodeHandle& nh, std::string topic_name, size_t buff_size) 
     :nh_(nh) {
     subscriber_ = nh_.subscribe(topic_name, buff_size, &GNSSSubscriber::msg_callback, this);
+    // subscriber_ = nh_.subscribe<sensor_msgs::NavSatFixConstPtr>(topic_name, buff_size, boost::bind(&GNSSSubscriber::msg_callback,this,_1));
 }
 
 void GNSSSubscriber::msg_callback(const sensor_msgs::NavSatFixConstPtr& nav_sat_fix_ptr) {

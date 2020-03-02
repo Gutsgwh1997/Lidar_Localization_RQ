@@ -11,6 +11,7 @@
 namespace lidar_localization {
 class IMUData {
   public:
+    // IMU的测量值是载体在惯性空间下的加速度与角速度
     struct LinearAcceleration {
       double x = 0.0;
       double y = 0.0;

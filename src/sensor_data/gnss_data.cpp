@@ -7,8 +7,9 @@
 
 #include "glog/logging.h"
 
-//静态成员变量必须在类外初始化
+// 静态成员变量必须在类外初始化
 bool lidar_localization::GNSSData::origin_position_inited = false;
+// 将GPS的经纬度(WGS84)转化为东北天坐标的类
 GeographicLib::LocalCartesian lidar_localization::GNSSData::geo_converter;
 
 namespace lidar_localization {
