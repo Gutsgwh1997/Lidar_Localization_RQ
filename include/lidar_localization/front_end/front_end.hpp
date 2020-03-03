@@ -17,6 +17,9 @@
 #include "lidar_localization/sensor_data/cloud_data.hpp"
 
 namespace lidar_localization {
+    /**
+     * @brief 构造后先设定InitPose()，之后调用Update便可以获得位姿态
+     */
 class FrontEnd {
   public:
     class Frame {  

@@ -35,7 +35,7 @@ Eigen::Matrix4f FrontEnd::Update(const CloudData& cloud_data) {
     cloud_filter_.setInputCloud(current_frame_.cloud_data.cloud_ptr);
     cloud_filter_.filter(*filtered_cloud_ptr);
 
-    // 这里的静态变量很细节
+    // 这里的静态变量很细节,静态变量的初始化只有一次
     static Eigen::Matrix4f step_pose = Eigen::Matrix4f::Identity();
     static Eigen::Matrix4f last_pose = init_pose_;
     static Eigen::Matrix4f predict_pose = init_pose_;
