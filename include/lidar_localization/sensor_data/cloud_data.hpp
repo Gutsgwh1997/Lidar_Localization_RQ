@@ -23,7 +23,7 @@ class CloudData {
 
   public:
     double time = 0.0;
-    CLOUD_PTR cloud_ptr;
+    CLOUD_PTR cloud_ptr;   // cloud_ptr是一个shared_ptr，能自动释放所指向的对象。
 };
 }
 

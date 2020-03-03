@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
     ros::init(argc, argv, "test_frame_node");
     ros::NodeHandle nh;
 
+    // Subscriber构造出来便自动注册了ROS的消息处理回调函数
     std::shared_ptr<CloudSubscriber> cloud_sub_ptr = std::make_shared<CloudSubscriber>(nh, "/kitti/velo/pointcloud", 100);
     std::shared_ptr<IMUSubscriber> imu_sub_ptr = std::make_shared<IMUSubscriber>(nh, "/kitti/oxts/imu", 100);
     std::shared_ptr<GNSSSubscriber> gnss_sub_ptr = std::make_shared<GNSSSubscriber>(nh, "/kitti/oxts/gps/fix", 100);

@@ -38,7 +38,7 @@ class IMUData {
   
   public:
     // 把四元数转换成旋转矩阵送出去
-    Eigen::Matrix3f GetOrientationMatrix() {
+    Eigen::Matrix3f GetOrientationMatrix() const {
       Eigen::Quaterniond q(orientation.w, orientation.x, orientation.y, orientation.z);
       Eigen::Matrix3f matrix = q.matrix().cast<float>();
 
