@@ -7,6 +7,7 @@
 #define LIDAR_LOCALIZATION_FRONT_END_FRONT_END_HPP_
 
 #include <deque>
+#include <string>
 
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/point_cloud.h>
@@ -53,8 +54,8 @@ class FrontEnd {
     bool InitWithConfig();
     bool InitParam(const YAML::Node& config_node);
     bool InitDataPath(const YAML::Node& config_node);
-    bool InitRegistration(std::shared_ptr<RegistrationInterface>& registration_ptr, const YAML:Node& config_node);
-    bool InitFilter(std::string filter_user, std::shared_ptr<CloudFilterInterface>& filter_ptr, const YAML:Node& config_node);
+    bool InitRegistration(std::shared_ptr<RegistrationInterface>& registration_ptr, const YAML::Node& config_node);
+    bool InitFilter(std::string filter_user, std::shared_ptr<CloudFilterInterface>& filter_ptr, const YAML::Node& config_node);
 
   private:
    std::string data_path_;

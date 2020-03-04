@@ -54,6 +54,7 @@ class FrontEndFlow {
     CloudData current_cloud_data_;
     IMUData current_imu_data_;
     GNSSData current_gnss_data_;
+    GNSSData first_valid_gnss_data_;
 
     CloudData::CLOUD_PTR local_map_ptr_;
     CloudData::CLOUD_PTR global_map_ptr_;
