@@ -20,7 +20,7 @@
 
 namespace lidar_localization {
     /**
-     * @brief 构造后先设定InitPose()，之后调用Update便可以获得位姿态
+     * @brief 构造后先设定InitPose()，之后调用Update()便可以获得位姿态
      */
 class FrontEnd {
   public:
