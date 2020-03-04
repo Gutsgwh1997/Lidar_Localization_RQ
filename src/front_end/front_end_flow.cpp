@@ -29,16 +29,29 @@ FrontEndFlow::FrontEndFlow(ros::NodeHandle& nh) {
 }
 
 bool FrontEndFlow::Run(){
+    // ReadData();
+    // if (!InitCalibration())
+    //     return false;
+    // while(HasData()){
+    //     if (!ValidData())
+    //         continue;
+    //     InitGNSS();
+    //     UpdateGNSSOdometry();
+    //     if (UpdateLaserOdometry())
+    //         PublishData();
+    // }
+
+    // return true;
     ReadData();
-    if (!InitCalibration())
-        return false;
-    while(HasData()){
-        if (!ValidData())
-            continue;
-        InitGNSS();
+
+    if (!InitCalibration()) return false;
+
+    if (!InitGNSS()) return false;  // GNSS的初始化不必等到所有的数据都满足条件
+                                    // 只要某一帧的激光轨迹与GNSS的对其就行，不必非要第一帧开始对其。
+    while (HasData()) {
+        if (!ValidData()) continue;
         UpdateGNSSOdometry();
-        if (UpdateLaserOdometry())
-            PublishData();
+        if (UpdateLaserOdometry()) PublishData();
     }
 
     return true;
@@ -70,6 +83,7 @@ bool FrontEndFlow::InitCalibration() {
     if (!calibration_received) {
         if (lidar_to_imu_ptr_->LookupData(lidar_to_imu_)) {
             calibration_received = true;
+            LOG(INFO)<<"Lidat to IMU transform is reveived :"<<std::endl<<lidar_to_imu_;
         }
     }
     return calibration_received;
@@ -79,7 +93,9 @@ bool FrontEndFlow::InitGNSS() {
     static bool gnss_inited = false;
     if (!gnss_inited && gnss_data_buff_.size() > 0) {
         GNSSData first_gnss_data = gnss_data_buff_.front();
+        // GNSSData first_gnss_data = first_valid_gnss_data_;  // 注意初始化时机
         first_gnss_data.InitOriginPosition();
+        LOG(INFO)<<"GNSS origin is inited.";
         gnss_inited = true;
     }
     return gnss_inited;
@@ -89,10 +105,12 @@ bool FrontEndFlow::HasData() {
     if ( cloud_data_buff_.size()>0 && imu_data_buff_.size()>0 && gnss_data_buff_.size()>0)
         return true;
     else
+        LOG(ERROR)<<"There is no data in buff!";
         return false;
 }
 
 bool FrontEndFlow::ValidData() {
+    static bool is_first_gnss_data = true;
     current_imu_data_   = imu_data_buff_.front();
     current_gnss_data_  = gnss_data_buff_.front();
     current_cloud_data_ = cloud_data_buff_.front();
@@ -108,12 +126,15 @@ bool FrontEndFlow::ValidData() {
         LOG(INFO) << "Cloud points data is late." << std::endl;
         return false;
     } else {
+        if(is_first_gnss_data){
+            first_valid_gnss_data_ = gnss_data_buff_.front();
+            is_first_gnss_data = false;
+        }
         cloud_data_buff_.pop_front();
         imu_data_buff_.pop_front();
         gnss_data_buff_.pop_front();
-
-        return true;
     }
+    return true;
 }
 
 bool FrontEndFlow::UpdateGNSSOdometry() {
@@ -139,9 +160,10 @@ bool FrontEndFlow::UpdateLaserOdometry() {    // 这里调用FrontEnd的类的�
     }
 
     laser_odometry_ = Eigen::Matrix4f::Identity();
-    if (front_end_ptr_->Update(current_cloud_data_, laser_odometry_))
+    if (front_end_ptr_->Update(current_cloud_data_, laser_odometry_)) {
+        LOG(INFO) << "Lidar odometry update!";
         return true;
-    else
+    } else
         return false;
 }
 
