@@ -24,6 +24,6 @@ class NDTRegistration : public RegistrationInterface {
 
    private:
     pcl::NormalDistributionsTransform<CloudData::POINT, CloudData::POINT>::Ptr ndt_ptr_;
-}
+};
 }
 #endif
