@@ -29,18 +29,18 @@ bool IMUData::SyncData(std::deque<IMUData>& UnsyncedData, std::deque<IMUData>& S
         if (UnsyncedData.at(1).time < sync_time) {
             UnsyncedData.pop_front();
             LOG(INFO)<<"There are at least two frames of IMUData before sync_time";
-            continue;
+            continue;   // 到达这里可以保证sync_time前之有一帧IMUData
         }
         if (sync_time - UnsyncedData.front().time > 0.2) {
             LOG(WARNING)<<"IMUData maybe wrong, throw it";
             UnsyncedData.pop_front();
-            break;
+            return false;
         }
         
         if (UnsyncedData.at(1).time - sync_time > 0.2) {
             LOG(WARNING)<<"IMUData maybe wrong, throw it";
             UnsyncedData.pop_front();
-            break;
+            return false;
         }
         break;
     }

@@ -8,6 +8,7 @@
 #define LIDAR_LOCALIZATION_SENSOR_DATA_GNSS_DATA_HPP_
 
 #include <vector>
+#include <deque>
 #include <string>
 
 #include "Geocentric/LocalCartesian.hpp"
@@ -35,6 +36,7 @@ class GNSSData {
   public: 
     void InitOriginPosition();
     void UpdateXYZ();
+    static bool SyncData(std::deque<GNSSData>& UnsyncedData, std::deque<GNSSData>& SyncedData, double sync_time);
 };
 }
 #endif
