@@ -15,7 +15,9 @@ using namespace lidar_localization;
 std::shared_ptr<FrontEndFlow> _front_end_flow_ptr;
 
 bool save_map_callback(saveMap::Request &request, saveMap::Response &response) {
+    LOG(INFO)<<"Start saveMap";
     response.succeed = _front_end_flow_ptr->SaveMap();  // 一定要先保存地图
+    LOG(INFO)<<"Save map finished! ";
     _front_end_flow_ptr->PublishGlobalMap();            // 才能发布地图
     return response.succeed;
 }
