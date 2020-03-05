@@ -4,8 +4,8 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Odometry1/Shape1
-        - /Odometry2/Shape1
+        - /Gnss1/Shape1
+        - /LidarOdom1/Shape1
       Splitter Ratio: 0.5
     Tree Height: 629
   - Class: rviz/Selection
@@ -69,13 +69,13 @@ Visualization Manager:
         Value: true
       Enabled: true
       Keep: 10000000
-      Name: Odometry
+      Name: Gnss
       Position Tolerance: 1
       Shape:
         Alpha: 1
         Axes Length: 1
         Axes Radius: 0.100000001
-        Color: 255; 25; 0
+        Color: 0; 255; 0
         Head Length: 5
         Head Radius: 1
         Shaft Length: 1
@@ -115,13 +115,13 @@ Visualization Manager:
         Value: true
       Enabled: true
       Keep: 100000
-      Name: Odometry
+      Name: LidarOdom
       Position Tolerance: 1
       Shape:
         Alpha: 1
         Axes Length: 1
         Axes Radius: 0.100000001
-        Color: 255; 255; 0
+        Color: 255; 0; 0
         Head Length: 5
         Head Radius: 1
         Shaft Length: 1
@@ -142,7 +142,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -159,7 +159,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -275,25 +275,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 255.22496
+      Distance: 536.473022
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 44.9536057
-        Y: 50.9633522
-        Z: -1.82022357
+        X: 158.692383
+        Y: 97.8887024
+        Z: -0.616688848
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.56979632
+      Pitch: 1.53979635
       Target Frame: base_link
       Value: Orbit (rviz)
-      Yaw: 4.20358467
+      Yaw: 4.20858383
     Saved: ~
 Window Geometry:
   Displays:
