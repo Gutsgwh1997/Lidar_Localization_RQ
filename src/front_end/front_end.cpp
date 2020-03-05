@@ -110,9 +110,10 @@ bool FrontEnd::SaveMap(){
     CloudData::CLOUD_PTR key_frame_cloud_ptr(new CloudData::CLOUD());
     CloudData::CLOUD_PTR transformed_cloud_ptr(new CloudData::CLOUD());
 
-    for(size_t i =0; i<global_map_frames_.size(); ++i){
-        std::string key_frame_path = key_frame_path_ + "/" + std::to_string(i) +".pcd";
+    for (size_t i = 0; i < global_map_frames_.size(); ++i) {
+        std::string key_frame_path = key_frame_path_ + "/" + std::to_string(i) + ".pcd";
         pcl::io::loadPCDFile(key_frame_path, *key_frame_cloud_ptr);
+        display_filter_ptr_->Filter(key_frame_cloud_ptr, key_frame_cloud_ptr);
         pcl::transformPointCloud(*key_frame_cloud_ptr, *transformed_cloud_ptr, global_map_frames_.at(i).pose);
         *global_map_ptr_ += *transformed_cloud_ptr;
     }
