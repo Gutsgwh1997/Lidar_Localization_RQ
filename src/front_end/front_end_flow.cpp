@@ -14,6 +14,7 @@ FrontEndFlow::FrontEndFlow(ros::NodeHandle& nh) {
     cloud_sub_ptr_      = std::make_shared<CloudSubscriber>(nh, "/kitti/velo/pointcloud", 10000);
     imu_sub_ptr_        = std::make_shared<IMUSubscriber>(nh, "/kitti/oxts/imu", 10000);
     gnss_sub_ptr_       = std::make_shared<GNSSSubscriber>(nh, "/kitti/oxts/gps/fix", 10000);
+    velocity_sub_ptr_   = std::make_shared<VelocitySubcriber>(nh, "/kitti/oxts/gps/vel", 10000);
     lidar_to_imu_ptr_   = std::make_shared<TFListener>(nh, "velo_link", "imu_link");
 
     cloud_pub_ptr_      = std::make_shared<CloudPublisher>(nh, "current_scan", 10000, "/map");
@@ -42,7 +43,10 @@ bool FrontEndFlow::Run(){
     // }
 
     // return true;
-    ReadData();
+    if (!ReadData()) {
+        LOG(WARNING)<<"数据不同步!";
+        return false;
+    }
 
     if (!InitCalibration()) return false;
 
@@ -72,8 +76,26 @@ bool FrontEndFlow::PublishGlobalMap() {
 
 bool FrontEndFlow::ReadData() {
     cloud_sub_ptr_->ParseData(cloud_data_buff_);
-    imu_sub_ptr_->ParseData(imu_data_buff_);
-    gnss_sub_ptr_->ParseData(gnss_data_buff_);
+
+    static std::deque<IMUData> unsynced_imu_;
+    static std::deque<GNSSData> unsynced_gnss_;
+    static std::deque<VelocityData> unsynced_velocity_;
+
+    imu_sub_ptr_->ParseData(unsynced_imu_);
+    gnss_sub_ptr_->ParseData(unsynced_gnss_);
+    velocity_sub_ptr_->ParseData(unsynced_velocity_);
+
+    if (cloud_data_buff_.size() == 0) return false;
+
+    double cloud_time = cloud_data_buff_.front().time;
+    bool valid_imu    = IMUData::SyncData(unsynced_imu_, imu_data_buff_, cloud_time);
+    bool valid_gnss   = GNSSData::SyncData(unsynced_gnss_, gnss_data_buff_, cloud_time);
+    bool valid_velocity = VelocityData::SyncData(unsynced_velocity_, velocity_data_buff_, cloud_time);
+
+    if (!valid_imu || !valid_gnss || !valid_velocity) {
+        cloud_data_buff_.pop_front();
+        return false;
+    }
 
     return true;
 }
@@ -114,6 +136,7 @@ bool FrontEndFlow::ValidData() {
     current_imu_data_   = imu_data_buff_.front();
     current_gnss_data_  = gnss_data_buff_.front();
     current_cloud_data_ = cloud_data_buff_.front();
+    current_velocity_data_ = velocity_data_buff_.front();
 
     double d_time = current_cloud_data_.time - current_imu_data_.time;
     if (d_time < -0.05) {
@@ -123,6 +146,7 @@ bool FrontEndFlow::ValidData() {
     } else if (d_time > 0.05) {
         imu_data_buff_.pop_front();
         gnss_data_buff_.pop_front();
+        velocity_data_buff_.pop_front();
         LOG(INFO) << "Cloud points data is late." << std::endl;
         return false;
     } else {
@@ -133,6 +157,7 @@ bool FrontEndFlow::ValidData() {
         cloud_data_buff_.pop_front();
         imu_data_buff_.pop_front();
         gnss_data_buff_.pop_front();
+        velocity_data_buff_.pop_front();
     }
     return true;
 }
