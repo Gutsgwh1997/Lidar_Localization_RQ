@@ -24,6 +24,7 @@ class FrontEndFlow {
 
     bool Run();
     bool SaveMap();
+    bool SaveTrajectory();
     bool PublishGlobalMap();
 
   private:

@@ -6,6 +6,9 @@
  * @date 2020-03-04
  */
 #include "lidar_localization/front_end/front_end_flow.hpp"
+#include "lidar_localization/global_defination/global_defination.h"
+#include "lidar_localization/tools/file_manager.hpp"
+#include <boost/filesystem.hpp>
 #include "glog/logging.h"
 
 namespace lidar_localization {
@@ -55,7 +58,10 @@ bool FrontEndFlow::Run(){
     while (HasData()) {
         if (!ValidData()) continue;
         UpdateGNSSOdometry();
-        if (UpdateLaserOdometry()) PublishData();
+        if (UpdateLaserOdometry()){
+            PublishData();
+            SaveTrajectory();
+        } 
     }
 
     return true;
@@ -63,6 +69,37 @@ bool FrontEndFlow::Run(){
 
 bool FrontEndFlow::SaveMap(){
     return front_end_ptr_->SaveMap();
+}
+
+bool FrontEndFlow::SaveTrajectory(){
+    std::string data_directory = WORK_SPACE_PATH + "/slam_data/trajectory";
+    static bool is_file_created = false;
+    static std::ofstream ground_truth, laser_odom;
+
+    if(!is_file_created){
+        if(!filemanager::CreateDirectory(data_directory))
+            return false;
+        if(!filemanager::CreateFile(ground_truth,data_directory+"/ground_truth.txt"))
+            return false;
+        if(!filemanager::CreateFile(laser_odom,data_directory+"/laser_odom.txt"))
+            return false;
+        is_file_created = true;
+    }
+
+    for (int i =0; i<3; ++i){
+        for (int j=0; j<4; ++j){
+            ground_truth<<gnss_odometry_(i,j);
+            laser_odom<<laser_odometry_(i,j);
+            if (i==2&&j==3){
+                ground_truth<<std::endl;
+                laser_odom<<std::endl;
+            }else{
+                ground_truth<<" ";
+                laser_odom<<" ";
+            }
+        }
+    }
+    return true;
 }
 
 bool FrontEndFlow::PublishGlobalMap() {
