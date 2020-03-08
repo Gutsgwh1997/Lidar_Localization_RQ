@@ -52,8 +52,8 @@ bool DistortionAdjust::AdjustCloud(const CloudData::CLOUD_PTR& input_cloud_ptr, 
                                      origin_cloud_ptr->points[point_index].z);
 
         Eigen::Matrix3f current_matrix = UpdateMatrix(real_time);      // 根据角速度计算旋转矩阵
-        Eigen::Vector3f rotated_point = current_matrix * origin_point; // 我觉得这里需要加逆运算呢？
-        Eigen::Vector3f adjusted_point = rotated_point + velocity_ * real_time;
+        Eigen::Vector3f rotated_point = current_matrix.inverse() * origin_point; // 我觉得这里需要加逆运算呢？
+        Eigen::Vector3f adjusted_point = rotated_point - current_matrix.inverse() * velocity_ * real_time;
         CloudData::POINT point;
         point.x = adjusted_point(0);
         point.y = adjusted_point(1);
