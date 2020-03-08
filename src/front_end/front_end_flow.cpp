@@ -16,8 +16,8 @@ namespace lidar_localization {
 FrontEndFlow::FrontEndFlow(ros::NodeHandle& nh) {
     cloud_sub_ptr_      = std::make_shared<CloudSubscriber>(nh, "/kitti/velo/pointcloud", 10000);
     imu_sub_ptr_        = std::make_shared<IMUSubscriber>(nh, "/kitti/oxts/imu", 10000);
-    gnss_sub_ptr_       = std::make_shared<GNSSSubscriber>(nh, "/kitti/oxts/gps/fix", 10000);
-    velocity_sub_ptr_   = std::make_shared<VelocitySubcriber>(nh, "/kitti/oxts/gps/vel", 10000);
+    gnss_sub_ptr_       = std::make_shared<GNSSSubscriber>(nh, "/kitti/oxts/gps/fix", 10000);         // gnss的经纬度相关信息
+    velocity_sub_ptr_   = std::make_shared<VelocitySubcriber>(nh, "/kitti/oxts/gps/vel", 10000);      // oxts模块的线速度、角速度信息。
     lidar_to_imu_ptr_   = std::make_shared<TFListener>(nh, "velo_link", "imu_link");
 
     cloud_pub_ptr_      = std::make_shared<CloudPublisher>(nh, "current_scan", 10000, "/map");
@@ -27,6 +27,7 @@ FrontEndFlow::FrontEndFlow(ros::NodeHandle& nh) {
     gnss_pub_ptr_       = std::make_shared<OdometryPublisher>(nh, "gnss", "map", "lidar", 100000);
 
     front_end_ptr_ = std::make_shared<FrontEnd>();
+    distortion_adjust_ptr_ = std::make_shared<DistortionAdjust>();
     local_map_ptr_.reset(new CloudData::CLOUD());
     global_map_ptr_.reset(new CloudData::CLOUD());
     current_scan_ptr_.reset(new CloudData::CLOUD());
@@ -220,6 +221,10 @@ bool FrontEndFlow::UpdateLaserOdometry() {    // 这里调用FrontEnd的类的�
         laser_odometry_ = gnss_odometry_;
         return true;
     }
+
+    current_velocity_data_.TransformCoordinate(lidar_to_imu_);
+    distortion_adjust_ptr_->SetMotionInfo(0.1 ,current_velocity_data_);
+    distortion_adjust_ptr_->AdjustCloud(current_cloud_data_.cloud_ptr, current_cloud_data_.cloud_ptr);
 
     laser_odometry_ = Eigen::Matrix4f::Identity();
     if (front_end_ptr_->Update(current_cloud_data_, laser_odometry_)) {
