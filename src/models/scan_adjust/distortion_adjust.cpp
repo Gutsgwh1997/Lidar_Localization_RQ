@@ -29,6 +29,8 @@ bool DistortionAdjust::AdjustCloud(const CloudData::CLOUD_PTR& input_cloud_ptr, 
     Eigen::Matrix3f rotate_matrix = t_V.matrix();
     Eigen::Matrix4f transform_matrix = Eigen::Matrix4f::Identity();
     transform_matrix.block<3,3>(0,0) = rotate_matrix.inverse();         // 第一帧到雷达坐标系的变换（旋转）
+    // 都变换到初始帧，这样计算角度时候不用减去第一帧的角度
+    // 补偿完毕之后需要再变换回来
     pcl::transformPointCloud(*origin_cloud_ptr, *origin_cloud_ptr, transform_matrix);
 
     velocity_ = rotate_matrix * velocity_;            // 第一帧的速度，第一帧没有平移的
