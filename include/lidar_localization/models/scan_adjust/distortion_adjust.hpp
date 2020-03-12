@@ -19,9 +19,9 @@
 namespace lidar_localization {
 class DistortionAdjust {
    public:
-    // DistortionAdjust() = default;
+    DistortionAdjust() = default;
     bool SetMotionInfo(float scan_period_sec,const VelocityData& velocity_data);
-    bool AdjustCloud(const CloudData::CLOUD_PTR& input_cloud_ptr, CloudData::CLOUD_PTR& output_cloud_ptr);
+    bool AdjustCloud(CloudData::CLOUD_PTR& input_cloud_ptr, CloudData::CLOUD_PTR& output_cloud_ptr);
 
    private:
     inline Eigen::Matrix3f UpdateMatrix(float real_time);
@@ -34,4 +34,3 @@ class DistortionAdjust {
 }
 
 #endif
-

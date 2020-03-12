@@ -18,6 +18,11 @@ bool CreateFile(std::ofstream& ofs, const std::string& file_path);
 
 bool CreateDirectory(const std::string& directory_path);
 
+// 删除已经有的目录中的所有内容。
+bool InitDirectory(std::string directory_path, std::string use_for);
+
+bool CreateDirectory(std::string directory_path, std::string use_for);
+
 } // namespace filemanager
 } // namespace lidar_localization
 

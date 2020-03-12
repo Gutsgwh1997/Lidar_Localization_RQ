@@ -13,10 +13,10 @@
 #include "lidar_localization/sensor_data/velocity_data.hpp"
 
 namespace lidar_localization{
-class VelocitySubcriber{
+class VelocitySubscriber{
     public:
-        VelocitySubcriber(ros::NodeHandle& nh, const std::string& topic_name, size_t buff_size);
-        VelocitySubcriber()=default;
+        VelocitySubscriber(ros::NodeHandle& nh, const std::string& topic_name, size_t buff_size);
+        VelocitySubscriber()=default;
         void ParseData(std::deque<VelocityData>& velocity_data_buff);
     private:
         void msg_callback(const geometry_msgs::TwistStampedConstPtr& velocity_msg);

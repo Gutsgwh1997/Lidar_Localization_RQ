@@ -12,12 +12,12 @@ namespace lidar_localization {
 
 bool DistortionAdjust::SetMotionInfo(float scan_period_sec,const VelocityData& velocity_data) {
     scan_period_ = scan_period_sec;
-    velocity_<<velocity_data.angular_velocity.x, velocity_data.linear_velocity.y, velocity_data.linear_velocity.z;
+    velocity_<<velocity_data.linear_velocity.x, velocity_data.linear_velocity.y, velocity_data.linear_velocity.z;
     angular_rate_<<velocity_data.angular_velocity.x, velocity_data.angular_velocity.y,velocity_data.angular_velocity.z;
     return true;
 }
 
-bool DistortionAdjust::AdjustCloud(const CloudData::CLOUD_PTR& input_cloud_ptr, CloudData::CLOUD_PTR& output_cloud_ptr){
+bool DistortionAdjust::AdjustCloud(CloudData::CLOUD_PTR& input_cloud_ptr, CloudData::CLOUD_PTR& output_cloud_ptr){
     CloudData::CLOUD_PTR origin_cloud_ptr(new CloudData::CLOUD(*input_cloud_ptr));
     output_cloud_ptr->points.clear();
 
@@ -52,8 +52,10 @@ bool DistortionAdjust::AdjustCloud(const CloudData::CLOUD_PTR& input_cloud_ptr, 
                                      origin_cloud_ptr->points[point_index].z);
 
         Eigen::Matrix3f current_matrix = UpdateMatrix(real_time);      // 根据角速度计算旋转矩阵
-        Eigen::Vector3f rotated_point = current_matrix.inverse() * origin_point; // 我觉得这里需要加逆运算呢？
-        Eigen::Vector3f adjusted_point = rotated_point - current_matrix.inverse() * velocity_ * real_time;
+        Eigen::Vector3f rotated_point = current_matrix * origin_point; // 我觉得这里需要加逆运算呢？
+        Eigen::Vector3f adjusted_point = rotated_point + velocity_ * real_time;
+        // Eigen::Vector3f rotated_point = current_matrix.transpose() * origin_point; // 我觉得这里需要加逆运算呢？
+        // Eigen::Vector3f adjusted_point = rotated_point - current_matrix.transpose() * velocity_ * real_time;
         CloudData::POINT point;
         point.x = adjusted_point(0);
         point.y = adjusted_point(1);

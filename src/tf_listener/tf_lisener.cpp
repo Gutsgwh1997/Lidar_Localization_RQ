@@ -33,7 +33,7 @@ bool TFListener::TransformToMatrix(const tf::StampedTransform& transform, Eigen:
     Eigen::AngleAxisf rot_y_btol(pitch, Eigen::Vector3f::UnitY());
     Eigen::AngleAxisf rot_z_btol(yaw, Eigen::Vector3f::UnitZ());
 
-    // 此矩阵为 base_frame_id 到 child_frame_id 的转换矩阵
+    // 此矩阵为 child_frame_id 到 base_frame_id 的转换矩阵
     transform_matrix = (tl_btol * rot_z_btol * rot_y_btol * rot_x_btol).matrix();
 
     // 等价的实现

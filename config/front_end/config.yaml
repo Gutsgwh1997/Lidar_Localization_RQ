@@ -1,5 +1,5 @@
-data_path: ./   # 数据存放路径
-
+# data_path: ./   # 数据存放路径
+data_path: /media/gwh/学习资料  # 数据存放路径
 # 匹配
 registration_method: NDT   # 选择点云匹配方法，目前支持：NDT 
 

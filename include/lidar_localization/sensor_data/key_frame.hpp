@@ -1,6 +1,6 @@
 /**
  * @file key_frame.hpp
- * @brief 关键帧，在各个模块之间传递数据
+ * @brief 关键帧(只保存位姿)，在各个模块之间传递数据
  * @author GWH
  * @version 0.1
  * @date 2020-03-09

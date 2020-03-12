@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="lidar_localization"  type="back_end_node"  name="back_end_node"  output="screen"></node>
+</launch>

@@ -44,42 +44,41 @@ class FrontEnd {
     bool Update(const CloudData& cloud_data, Eigen::Matrix4f& cloud_pose);
     bool SetInitPose(const Eigen::Matrix4f& init_pose);
    
-    bool GetNewLocalMap(CloudData::CLOUD_PTR& local_map_ptr);   // 这几个函数中改变了display_filter_变量，故不能是const成员函数
-    bool GetNewGlobalMap(CloudData::CLOUD_PTR& global_map_ptr);
-    bool GetCurrentScan(CloudData::CLOUD_PTR& current_scan_ptr);
-    bool SaveMap();
+    // bool GetNewLocalMap(CloudData::CLOUD_PTR& local_map_ptr);   // 这几个函数中改变了display_filter_变量，故不能是const成员函数
+    // bool GetNewGlobalMap(CloudData::CLOUD_PTR& global_map_ptr);
+    // bool GetCurrentScan(CloudData::CLOUD_PTR& current_scan_ptr);
+    // bool SaveMap();
   
   private:
     bool UpdateNewFrame(const Frame& new_key_frame);
     bool InitWithConfig();
     bool InitParam(const YAML::Node& config_node);
-    bool InitDataPath(const YAML::Node& config_node);
+    // bool InitDataPath(const YAML::Node& config_node);
     bool InitRegistration(std::shared_ptr<RegistrationInterface>& registration_ptr, const YAML::Node& config_node);
     bool InitFilter(std::string filter_user, std::shared_ptr<CloudFilterInterface>& filter_ptr, const YAML::Node& config_node);
 
   private:
-   std::string data_path_;
-   std::string key_frame_path_;
+   // std::string data_path_;
+   // std::string key_frame_path_;
 
    std::shared_ptr<RegistrationInterface> registration_ptr_;
    std::shared_ptr<CloudFilterInterface> frame_filter_ptr_;      // 对新帧点云滤波
    std::shared_ptr<CloudFilterInterface> local_map_filter_ptr_;  // 对于局部地图滤波;
-   std::shared_ptr<CloudFilterInterface> display_filter_ptr_;    // GetNew...函数中，给显示用滤波;
 
    Frame current_frame_;
    std::deque<Frame> local_map_frames_;
-   std::deque<Frame> global_map_frames_;
    CloudData::CLOUD_PTR local_map_ptr_;  // 他们实际上都是智能指针，不必担心内存泄漏问题
-   CloudData::CLOUD_PTR global_map_ptr_;
-   CloudData::CLOUD_PTR result_cloud_ptr_;  // 每一帧点云匹配变换后的结果
+   // CloudData::CLOUD_PTR result_cloud_ptr_;  // 每一帧点云匹配变换后的结果
 
-   bool has_new_local_map_   = false;
-   bool has_new_global_map_  = false;
+   // bool has_new_local_map_   = false;
    float key_frame_distance_ = 2.0;
    int local_frame_num_      = 20;
-  
+   // CloudData::CLOUD_PTR global_map_ptr_;
+   // bool has_new_global_map_  = false;
+   // std::shared_ptr<CloudFilterInterface> display_filter_ptr_;    // GetNew...函数中，给显示用滤波;
+   // std::deque<Frame> global_map_frames_;
    Eigen::Matrix4f init_pose_    = Eigen::Matrix4f::Identity();
-   Eigen::Matrix4f predict_pose_ = Eigen::Matrix4f::Identity();  // 暂时没有用到
+   // Eigen::Matrix4f predict_pose_ = Eigen::Matrix4f::Identity();  // 暂时没有用到
 };
 }
 

@@ -1,0 +1,3 @@
+<launch>
+<node pkg="lidar_localization"  type="data_preprocessing_node"  name="data_preprocessing_node"  output="screen"></node>
+</launch>

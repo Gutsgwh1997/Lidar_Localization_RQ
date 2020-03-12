@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<GNSSSubscriber> gnss_sub_ptr = std::make_shared<GNSSSubscriber>(nh, "/kitti/oxts/gps/fix", 100);
     std::shared_ptr<TFListener> lidar_to_imu_ptr = std::make_shared<TFListener>(nh, "velo_link", "imu_link"); // Timu_lidar 获取target到source的变换
 
-    std::shared_ptr<CloudPublisher> cloud_pub_ptr = std::make_shared<CloudPublisher>(nh, "current_scan", 100, "map");
+    std::shared_ptr<CloudPublisher> cloud_pub_ptr = std::make_shared<CloudPublisher>(nh, "current_scan", "map", 100);
     std::shared_ptr<OdometryPublisher> odom_pub_ptr = std::make_shared<OdometryPublisher>(nh, "lidar_odom", "map", "lidar", 100);
 
     std::deque<CloudData> cloud_data_buff;      // deque容器没有原空间数据的复制和删除https://blog.csdn.net/longshengguoji/article/details/8519812

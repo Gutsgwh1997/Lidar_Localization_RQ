@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="lidar_localization"  type="viewer_node"              name="viewer_node"  output="screen"></node>
+    <node pkg="rviz"                type="rviz"  name="rviz"  args="-d $(find lidar_localization)/rviz/front_end.rviz"></node>
+</launch>
