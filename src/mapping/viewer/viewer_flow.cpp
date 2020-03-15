@@ -30,10 +30,12 @@ bool ViewerFlow::Run() {
     while(HasData()) {
         if (!ValidData())
             continue;
-
-        if (UpdateViewer()) {
-            PublishData();
-        }
+        viewer_ptr_->UpdateWithNewKeyFrame(key_frame_buff_,current_transformed_odom_,current_cloud_data_);
+        PublishLocalData();
+    }
+    if(optimized_key_frames_.size()>0){
+        viewer_ptr_->UpdateWithOptimizedKeyFrames(optimized_key_frames_);
+        PublishGlobalData();
     }
 
     return true;
@@ -94,12 +96,12 @@ bool ViewerFlow::ValidData() {
  *
  * @return 
  */
-bool ViewerFlow::UpdateViewer() {
-    return viewer_ptr_->Update(key_frame_buff_, 
-                               optimized_key_frames_, 
-                               current_transformed_odom_, 
-                               current_cloud_data_);
-}
+// bool ViewerFlow::UpdateViewer() {
+//     return viewer_ptr_->Update(key_frame_buff_, 
+//                                optimized_key_frames_, 
+//                                current_transformed_odom_, 
+//                                current_cloud_data_);
+// }
 
 /**
  * @brief 发布当前帧的位姿（投影到已经优化的轨迹上去）
@@ -107,16 +109,49 @@ bool ViewerFlow::UpdateViewer() {
  *
  * @return 
  */
-bool ViewerFlow::PublishData() {
+// bool ViewerFlow::PublishData() {
+//     optimized_odom_pub_ptr_->Publish(viewer_ptr_->GetCurrentPose());
+//     current_scan_pub_ptr_->Publish(viewer_ptr_->GetCurrentScan());
+
+//     if (viewer_ptr_->HasNewLocalMap() && local_map_pub_ptr_->HasSubscribers()) {
+//         CloudData::CLOUD_PTR cloud_ptr(new CloudData::CLOUD());
+//         viewer_ptr_->GetLocalMap(cloud_ptr);
+//         local_map_pub_ptr_->Publish(cloud_ptr);
+//     }
+
+//     if (viewer_ptr_->HasNewGlobalMap() && global_map_pub_ptr_->HasSubscribers()) {
+//         CloudData::CLOUD_PTR cloud_ptr(new CloudData::CLOUD());
+//         viewer_ptr_->GetGlobalMap(cloud_ptr);
+//         global_map_pub_ptr_->Publish(cloud_ptr);
+//     }
+
+//     return true;
+// }
+
+/**
+ * @brief 发布当前帧的位姿（投影到已经优化的轨迹上去）
+ *        若有接收者，发布局部地图
+ *
+ * @return 
+ */
+bool ViewerFlow::PublishLocalData() {
     optimized_odom_pub_ptr_->Publish(viewer_ptr_->GetCurrentPose());
     current_scan_pub_ptr_->Publish(viewer_ptr_->GetCurrentScan());
-
     if (viewer_ptr_->HasNewLocalMap() && local_map_pub_ptr_->HasSubscribers()) {
         CloudData::CLOUD_PTR cloud_ptr(new CloudData::CLOUD());
         viewer_ptr_->GetLocalMap(cloud_ptr);
         local_map_pub_ptr_->Publish(cloud_ptr);
     }
 
+    return true;
+}
+
+/**
+ * @brief 发布全局地图（每次优化完成之后，使用优化之后的位姿生成的）
+ *
+ * @return 
+ */
+bool ViewerFlow::PublishGlobalData() {
     if (viewer_ptr_->HasNewGlobalMap() && global_map_pub_ptr_->HasSubscribers()) {
         CloudData::CLOUD_PTR cloud_ptr(new CloudData::CLOUD());
         viewer_ptr_->GetGlobalMap(cloud_ptr);

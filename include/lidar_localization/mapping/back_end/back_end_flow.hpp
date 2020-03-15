@@ -26,6 +26,8 @@ class BackEndFlow {
 
     bool Run();
 
+    bool ForceOptimize();
+
   private:
     bool ReadData();
     bool HasData();

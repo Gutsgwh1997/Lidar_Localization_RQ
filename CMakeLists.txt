@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_service_files(
     FILES
     saveMap.srv
+    optimizeMap.srv
     )
 
 generate_messages(
@@ -37,6 +38,7 @@ include(cmake/eigen.cmake)
 include(cmake/geographic.cmake)
 include(cmake/global_defination.cmake)
 include(cmake/YAML.cmake)
+include(cmake/g2o.cmake)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 catkin_package()
@@ -52,7 +54,7 @@ target_link_libraries(test_frame_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES
 
 add_executable(front_end_node src/app/front_end_node.cpp ${ALL_SRCS})
 target_link_libraries(front_end_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
-add_dependencies(front_end_node ${catkin_EXPORTED_TARGETS} saveMap_gencpp)
+add_dependencies(front_end_node ${catkin_EXPORTED_TARGETS})
 
 add_executable(data_preprocessing_node src/app/data_preprocessing_node.cpp ${ALL_SRCS})
 target_link_libraries(data_preprocessing_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
@@ -61,8 +63,9 @@ add_executable(data_pretreat_node src/app/data_pretreat_node.cpp ${ALL_SRCS})
 target_link_libraries(data_pretreat_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(back_end_node src/app/back_end_node.cpp ${ALL_SRCS})
+add_dependencies(back_end_node ${catkin_EXPORTED_TARGETS} optimizeMap_gencpp)
 target_link_libraries(back_end_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 add_executable(viewer_node src/app/viewer_node.cpp ${ALL_SRCS})
-target_link_libraries(viewer_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 add_dependencies(viewer_node ${catkin_EXPORTED_TARGETS} saveMap_gencpp)
+target_link_libraries(viewer_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})

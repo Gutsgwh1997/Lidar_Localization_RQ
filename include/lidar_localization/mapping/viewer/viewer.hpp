@@ -20,8 +20,12 @@ class Viewer {
    public:
     Viewer();
 
-    bool Update(std::deque<KeyFrame>& new_key_frames, std::deque<KeyFrame>& optimized_key_frames,
-                PoseData transformed_data, CloudData cloud_data);
+    // bool Update(std::deque<KeyFrame>& new_key_frames, std::deque<KeyFrame>& optimized_key_frames,
+    //             PoseData transformed_data, CloudData cloud_data);
+    bool UpdateWithNewKeyFrame(std::deque<KeyFrame>& new_key_frames,
+                               PoseData transformed_data,
+                               CloudData cloud_data);
+    bool UpdateWithOptimizedKeyFrames(std::deque<KeyFrame>& optimized_key_frames);
 
     bool SaveMap();
     Eigen::Matrix4f& GetCurrentPose();
@@ -38,7 +42,7 @@ class Viewer {
     bool InitFilter(std::string filter_user, std::shared_ptr<CloudFilterInterface>& filter_ptr,
                     const YAML::Node& config_node);
 
-    void ResetParam();
+    // void ResetParam();
     bool OptimizeKeyFrames();
     bool JointGlobalMap(CloudData::CLOUD_PTR& global_map_ptr);
     bool JointLocalMap(CloudData::CLOUD_PTR& local_map_ptr);

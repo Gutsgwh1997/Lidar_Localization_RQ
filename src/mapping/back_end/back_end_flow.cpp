@@ -41,6 +41,22 @@ bool BackEndFlow::Run() {
     return true;
 }
 
+/**
+ * @brief 当bag文件播放完之后，关键帧里的后面几帧可能并没有得到优化,
+ *        因为上面三个条件计数还没达到新一次优化所需的数量要求
+ *        获得全部优化的关键帧并且发布出去
+ * @return 
+ */
+bool BackEndFlow::ForceOptimize() {
+    back_end_ptr_->ForceOptimize();
+    if (back_end_ptr_->HasNewOptimized()) {
+        std::deque<KeyFrame> optimized_key_frames;
+        back_end_ptr_->GetOptimizedKeyFrames(optimized_key_frames);
+        key_frames_pub_ptr_->Publish(optimized_key_frames);
+    }
+    return true;
+}
+
 bool BackEndFlow::ReadData() {
     cloud_sub_ptr_->ParseData(cloud_data_buff_);
     gnss_pose_sub_ptr_->ParseData(gnss_pose_data_buff_);
