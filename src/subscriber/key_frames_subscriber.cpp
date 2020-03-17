@@ -17,8 +17,8 @@ void KeyFramesSubscriber::msg_callback(const nav_msgs::Path::ConstPtr& key_frame
     new_key_frames_data_.clear();
     for (size_t i = 0; i < key_frames_data_ptr->poses.size(); ++i) {
         KeyFrame key_frame;
-        key_frame.time  = key_frames_data_ptr->header.stamp.toSec();
-        key_frame.index = key_frames_data_ptr->header.seq;
+        key_frame.time  = key_frames_data_ptr->poses.at(i).header.stamp.toSec();
+        key_frame.index = (unsigned int)i;
 
         key_frame.pose(0, 3) = key_frames_data_ptr->poses.at(i).pose.position.x;
         key_frame.pose(1, 3) = key_frames_data_ptr->poses.at(i).pose.position.y;
