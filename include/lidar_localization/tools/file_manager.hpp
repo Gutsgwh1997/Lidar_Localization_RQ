@@ -8,8 +8,10 @@
 #ifndef LIDAR_LOCALIZATION_TOOLS_FILE_MANAGER_HPP_
 #define LIDAR_LOCALIZATION_TOOLS_FILE_MANAGER_HPP_
 
+#include <Eigen/Dense>
 #include <boost/filesystem.hpp>
 #include <fstream>
+#include <vector>
 
 namespace lidar_localization {
 namespace filemanager {
@@ -23,7 +25,8 @@ bool InitDirectory(std::string directory_path, std::string use_for);
 
 bool CreateDirectory(std::string directory_path, std::string use_for);
 
-} // namespace filemanager
-} // namespace lidar_localization
+bool ReadTrajectory(std::string data_path, std::vector<Eigen::Matrix4f>& trajecroty);
+}  // namespace filemanager
+}  // namespace lidar_localization
 
 #endif

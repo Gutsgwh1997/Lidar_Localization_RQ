@@ -8,6 +8,8 @@
 
 #include "lidar_localization/tools/file_manager.hpp"
 #include "glog/logging.h"
+#include <string>
+#include <iostream>
 
 namespace lidar_localization {
 namespace filemanager {
@@ -64,6 +66,34 @@ bool CreateDirectory(std::string directory_path, std::string use_for) {
     }
 
     LOG(INFO) << use_for << "存放地址：" << std::endl << directory_path << std::endl << std::endl;
+    return true;
+}
+
+bool ReadTrajectory(std::string data_path, std::vector<Eigen::Matrix4f>& trajecroty) {
+    trajecroty.clear();
+    std::ifstream fin(data_path.c_str());
+    std::string line_info;
+    float temp_matrix_array[12] = {};
+    if (fin) {                             // 有该文件
+        while (getline(fin, line_info)) {  // line_info中不包括每行的换行符
+            std::stringstream input(line_info);
+            float input_result;
+            int cout = 0;
+            while(input >> input_result) {
+                temp_matrix_array[cout] = input_result;
+                ++cout;
+            }
+            Eigen::Matrix<float, 3, 4, Eigen::RowMajor> temp_matrix(temp_matrix_array);
+            Eigen::Matrix4f trans_pose = Eigen::Matrix4f::Identity();
+            trans_pose.block<3,3>(0,0) = temp_matrix.block<3,3>(0,0);
+            trans_pose.block<3,1>(0,3) = temp_matrix.block<3,1>(0,3);
+            trajecroty.push_back(trans_pose);
+        }
+        fin.close();
+    } else{  // 没有该文件
+        std::cout << "No such file to read trajectory." << std::endl;
+        return false;
+    }
     return true;
 }
 

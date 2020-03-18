@@ -46,8 +46,10 @@ catkin_package()
 file(GLOB_RECURSE ALL_SRCS "*.cpp")
 file(GLOB_RECURSE NODE_SRCS "src/app/*_node.cpp")
 file(GLOB_RECURSE THIRD_PARTY_SRCS "third_party/*.cpp")
+file(GLOB_RECURSE TEST_SRCS "test/*.cpp")
 list(REMOVE_ITEM ALL_SRCS ${NODE_SRCS})
 list(REMOVE_ITEM ALL_SRCS ${THIRD_PARTY_SRCS})
+list(REMOVE_ITEM ALL_SRCS ${TEST_SRCS})
 
 add_executable(test_frame_node src/app/test_frame_node.cpp ${ALL_SRCS})
 target_link_libraries(test_frame_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
@@ -73,3 +75,9 @@ target_link_libraries(loop_closing_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARI
 add_executable(viewer_node src/app/viewer_node.cpp ${ALL_SRCS})
 add_dependencies(viewer_node ${catkin_EXPORTED_TARGETS} saveMap_gencpp)
 target_link_libraries(viewer_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
+
+
+# 我的测试文件
+add_executable(read_trajectory_and_mapping test/read_trajectory_and_mapping.cpp ${ALL_SRCS})
+add_dependencies(read_trajectory_and_mapping ${catkin_EXPORTED_TARGETS})
+target_link_libraries(read_trajectory_and_mapping ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
