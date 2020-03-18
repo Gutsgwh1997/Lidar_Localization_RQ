@@ -58,4 +58,9 @@ bool NDTRegistration::SetRegistrationParam(float res, float step_size, float tra
 
     return true;
 }
+
+float NDTRegistration::GetFitnessScore() {
+    return ndt_ptr_->getFitnessScore();
+}
+
 }  // namespace

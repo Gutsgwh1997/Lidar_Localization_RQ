@@ -66,6 +66,10 @@ add_executable(back_end_node src/app/back_end_node.cpp ${ALL_SRCS})
 add_dependencies(back_end_node ${catkin_EXPORTED_TARGETS} optimizeMap_gencpp)
 target_link_libraries(back_end_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
+add_executable(loop_closing_node src/app/loop_closing_node.cpp ${ALL_SRCS})
+add_dependencies(loop_closing_node ${catkin_EXPORTED_TARGETS})
+target_link_libraries(loop_closing_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
+
 add_executable(viewer_node src/app/viewer_node.cpp ${ALL_SRCS})
 add_dependencies(viewer_node ${catkin_EXPORTED_TARGETS} saveMap_gencpp)
 target_link_libraries(viewer_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})

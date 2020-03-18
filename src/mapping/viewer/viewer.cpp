@@ -249,6 +249,7 @@ bool Viewer::SaveMap() {
 
     CloudData::CLOUD_PTR global_map_ptr(new CloudData::CLOUD());
     JointGlobalMap(global_map_ptr);
+    global_map_filter_ptr_->Filter(global_map_ptr, global_map_ptr);
 
     std::string map_file_path = map_path_ + "/map.pcd";
     pcl::io::savePCDFileBinary(map_file_path, *global_map_ptr);
