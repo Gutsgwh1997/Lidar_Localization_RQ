@@ -76,6 +76,9 @@ add_executable(viewer_node src/app/viewer_node.cpp ${ALL_SRCS})
 add_dependencies(viewer_node ${catkin_EXPORTED_TARGETS} saveMap_gencpp)
 target_link_libraries(viewer_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
+add_executable(matching_node src/app/matching_node.cpp ${ALL_SRCS})
+add_dependencies(matching_node ${catkin_EXPORTED_TARGETS})
+target_link_libraries(matching_node ${catkin_LIBRARIES} ${ALL_TARGET_LIBRARIES})
 
 # 我的测试文件
 add_executable(read_trajectory_and_mapping test/read_trajectory_and_mapping.cpp ${ALL_SRCS})
